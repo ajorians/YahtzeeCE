@@ -194,10 +194,10 @@ int HandleGameKeyPresses()
 				YahtzeeRoll(&m_Yahtzee.m_Yahtzee);
 				DisplayBoard();
 			}
-//			else
-//			{
-//				return false;
-//			}
+			else
+			{
+				return 0;
+			}
 		}
 		else if( m_Yahtzee.m_eSelection >= Dice1Spot && m_Yahtzee.m_eSelection <= Dice5Spot )
 		{
