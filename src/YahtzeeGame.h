@@ -33,7 +33,9 @@ void DisplayBoard();
 void DrawSelector(enum SelectorSpot eSpot, int bON);
 void DrawScoreValue(int nX, int nY, int nValue, int bUsed);
 void DrawDice(int nX, int nY, int nDiceSideLength, int nNumber);
+void ClearDice(int nDice);
 void DrawBox(int nX, int nY, int nWidth, int nHeight, int c);
+void FillBox(int nX, int nY, int nWidth, int nHeight, int c);
 
 
 

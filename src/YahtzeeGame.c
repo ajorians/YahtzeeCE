@@ -67,6 +67,9 @@ void InitYahtzeeGame()
 	m_Yahtzee.m_eLastSelection = RollSpot;
 	m_Yahtzee.m_eSelection = RollSpot;
 	YahtzeeReset(&m_Yahtzee.m_Yahtzee);
+	
+	/* Fill the screen white */
+	gfx_FillScreen(gfx_white);
 	DisplayBoard();
 }
 
@@ -98,9 +101,15 @@ int HandleGameKeyPresses()
 		m_Yahtzee.m_eLastSelection = m_Yahtzee.m_eSelection;
 		
 		if( m_Yahtzee.m_eSelection == Dice1Spot )//Convenient
+		{
+			ClearDice( m_Yahtzee.m_eSelection - Dice1Spot );
 			m_Yahtzee.m_eSelection = Dice5Spot;
+		}
 		else if( m_Yahtzee.m_eSelection >= Dice1Spot && m_Yahtzee.m_eSelection <= Dice5Spot )//A Dice
+		{
+			ClearDice( m_Yahtzee.m_eSelection - Dice1Spot );
 			--m_Yahtzee.m_eSelection;
+		}
 		else if( m_Yahtzee.m_eSelection == ThreeOfAKindSpot )
 			m_Yahtzee.m_eSelection = AcesSpot;
 		else if( m_Yahtzee.m_eSelection == FourOfAKindSpot )
@@ -125,9 +134,15 @@ int HandleGameKeyPresses()
 		m_Yahtzee.m_eLastSelection = m_Yahtzee.m_eSelection;
 		
 		if( m_Yahtzee.m_eSelection == Dice5Spot )//Convenient
+		{
+			ClearDice( m_Yahtzee.m_eSelection - Dice1Spot );
 			m_Yahtzee.m_eSelection = Dice1Spot;
+		}
 		else if( m_Yahtzee.m_eSelection <= Dice4Spot && m_Yahtzee.m_eSelection >= ChanceSpot )
+		{
+			ClearDice( m_Yahtzee.m_eSelection - Dice1Spot );
 			++m_Yahtzee.m_eSelection;
+		}
 		else if( m_Yahtzee.m_eSelection == AcesSpot )
 			m_Yahtzee.m_eSelection = ThreeOfAKindSpot;
 		else if( m_Yahtzee.m_eSelection == TwosSpot )
@@ -159,7 +174,10 @@ int HandleGameKeyPresses()
 		else if( m_Yahtzee.m_eSelection <= ChanceSpot && m_Yahtzee.m_eSelection >= AcesSpot )//Choice spot
 			--m_Yahtzee.m_eSelection;
 		else if( m_Yahtzee.m_eSelection >= Dice1Spot && m_Yahtzee.m_eSelection <= Dice5Spot )//A dice
+		{
+			ClearDice( m_Yahtzee.m_eSelection - Dice1Spot );
 			m_Yahtzee.m_eSelection = ChanceSpot;
+		}
 		
 		DisplayBoard();
 	}
@@ -179,7 +197,10 @@ int HandleGameKeyPresses()
 				++m_Yahtzee.m_eSelection;
 		}
 		else if( m_Yahtzee.m_eSelection >= Dice1Spot && m_Yahtzee.m_eSelection <= Dice5Spot )//A dice
+		{
+			ClearDice( m_Yahtzee.m_eSelection - Dice1Spot );
 			m_Yahtzee.m_eSelection = RollSpot;
+		}
 		
 		DisplayBoard();
 	}
@@ -192,6 +213,7 @@ int HandleGameKeyPresses()
 			{
 				TRACE("Roll");
 				YahtzeeRoll(&m_Yahtzee.m_Yahtzee);
+				gfx_FillScreen(gfx_white);
 				DisplayBoard();
 			}
 			else
@@ -205,6 +227,7 @@ int HandleGameKeyPresses()
 			{
 				TRACE("Hold Dice");
 				YahtzeeHoldDice(&m_Yahtzee.m_Yahtzee, m_Yahtzee.m_eSelection - Dice1Spot, !YahtzeeGetDiceHolded(&m_Yahtzee.m_Yahtzee, m_Yahtzee.m_eSelection - Dice1Spot));
+				ClearDice( m_Yahtzee.m_eSelection - Dice1Spot );
 				DisplayBoard();
 			}
 		}
@@ -220,9 +243,10 @@ int HandleGameKeyPresses()
 				
 				if( IsGameOver(&m_Yahtzee.m_Yahtzee) )
 				{
-					//drawBox_(0, 1.5 * CHAR_HEIGHT-1, SCREEN_WIDTH, CHAR_HEIGHT+3, WHITE, m_screen);//Clear Roll /Play again&Quit area
+					FillBox(0, 1.5 * CHAR_HEIGHT-1, SCREEN_WIDTH, CHAR_HEIGHT+3, gfx_white);//Clear Roll /Play again&Quit area
 				}
 				
+				gfx_FillScreen(gfx_white);
 				DisplayBoard();
 			}
 		}
@@ -233,7 +257,8 @@ int HandleGameKeyPresses()
 			YahtzeeReset(&m_Yahtzee.m_Yahtzee);
 			m_Yahtzee.m_eLastSelection = m_Yahtzee.m_eSelection = RollSpot;
 			
-			//drawBox_(0, 1.5 * CHAR_HEIGHT-1, SCREEN_WIDTH, CHAR_HEIGHT+3, WHITE, m_screen);//Clear Roll /Play again&Quit area
+			//FillBox(0, 1.5 * CHAR_HEIGHT-1, SCREEN_WIDTH, CHAR_HEIGHT+3, gfx_white);//Clear Roll /Play again&Quit area
+			gfx_FillScreen(gfx_white);
 			
 			DisplayBoard();
 		}
@@ -243,13 +268,12 @@ int HandleGameKeyPresses()
 
 void DisplayBoard()
 {
-	/* Fill the screen white */
-	gfx_FillScreen(gfx_white);
+	//gfx_FillScreen(gfx_white);
 
 	/* Set the text color */
 	gfx_SetTextFGColor(gfx_black);
 	//Status
-	//drawBox_(0, 0, SCREEN_WIDTH, CHAR_HEIGHT, WHITE, m_screen);//Clear status
+	FillBox(0, 0, SCREEN_WIDTH, CHAR_HEIGHT, gfx_white);//Clear status
 	{
 		char buffer[2] = {0};
 		gfx_PrintStringXY("Roll: ", 0, 0  * CHAR_HEIGHT);
@@ -434,7 +458,7 @@ void DrawScoreValue(int nX, int nY, int nValue, int bUsed)
 	if( !bUsed && GetRollNumber(&m_Yahtzee.m_Yahtzee )<= 0 )//If haven't rolled don't display spots haven't choosen
 		return;
 	
-	//drawBox_(nX, nY, CHAR_WIDTH*3, CHAR_HEIGHT, WHITE, buffer);
+	FillBox(nX, nY, CHAR_WIDTH*3, CHAR_HEIGHT, gfx_white );
 	
 	gfx_SetTextFGColor(c);
 	itoa(nValue, buf, 4);
@@ -493,9 +517,24 @@ void DrawDice(int nX, int nY, int nDiceSideLength, int nNumber)
 	}
 }
 
+void ClearDice(int nDice)
+{
+	int nDiceSideLength = SCREEN_WIDTH/(2*NUMBER_OF_DICE+1);//The +1 is because I want a gap and then the first dice
+	int nDisplaceAmount = nDiceSideLength/2;
+	int nX = nDiceSideLength*(2*nDice+1), nY = SCREEN_HEIGHT - nDiceSideLength-1 - nDisplaceAmount;//The -1 is be off the bottom
+	
+	FillBox( nX-1, nY, nDiceSideLength+2, SCREEN_HEIGHT-nY, gfx_white);
+}
+
 void DrawBox(int nX, int nY, int nWidth, int nHeight, int c)
 {
 	gfx_SetColor(c);
 	gfx_Rectangle_NoClip( nX, nY, nWidth, nHeight);
+}
+
+void FillBox(int nX, int nY, int nWidth, int nHeight, int c)
+{
+	gfx_SetColor(c);
+	gfx_FillRectangle( nX, nY, nWidth, nHeight );
 }
 

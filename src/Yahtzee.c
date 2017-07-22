@@ -31,9 +31,9 @@ void YahtzeeHoldDice(struct Yahtzee* pYahtzee, int nDiceIndex, int bHold)
 
 void ScoreSpot(struct Yahtzee* pYahtzee, enum ScoreCategory eCategory)
 {
-	if( GetValueSupplied(&pYahtzee->m_Score, eCategory) || pYahtzee->m_nRollNumber <= 0 )
+	if( pYahtzee->m_nRollNumber <= 0 || GetValueSupplied(&pYahtzee->m_Score, eCategory))
 		return;
-
+	
 	HandleIfYahtzee(&pYahtzee->m_Score, &pYahtzee->m_Dice);
 	
 	SetScore(&pYahtzee->m_Score, eCategory, ScoreForCategory(eCategory, &pYahtzee->m_Dice));

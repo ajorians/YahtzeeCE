@@ -53,7 +53,8 @@ void main(void) {
 		if (key == sk_Enter || key == sk_2nd )
 		{
 			InitYahtzeeGame();
-			Loop();
+			if( 0 == Loop() )
+				break;
 		}
 		else if( key == sk_Clear || key == sk_Power )
 		{
